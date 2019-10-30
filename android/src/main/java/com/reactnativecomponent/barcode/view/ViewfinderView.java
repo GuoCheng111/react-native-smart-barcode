@@ -170,6 +170,10 @@ public final class ViewfinderView extends View
 //        Log.i("Test","MIDDLE_LINE_WIDTH:"+MIDDLE_LINE_WIDTH);
     }
 
+    public void updateSlideValue(){
+        isFirst = false;
+    }
+
     @Override
     public void onDraw(Canvas canvas)
     {
@@ -187,7 +191,8 @@ public final class ViewfinderView extends View
 
             SPEEN_DISTANCE= (slideBottom-slideTop)/((scanTime/16)+2);
 
-
+            if(SPEEN_DISTANCE <= 0)
+                SPEEN_DISTANCE = 1;
         }
 
         int width = canvas.getWidth();
