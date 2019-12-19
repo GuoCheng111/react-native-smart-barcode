@@ -593,7 +593,9 @@ public class CaptureView extends FrameLayout implements TextureView.SurfaceTextu
 
         CameraManager.get().MAX_FRAME_WIDTH = this.MAX_FRAME_WIDTH;
         CameraManager.get().framingRect = null;
+        CameraManager.get().framingRectInPreview = null;
         if (viewfinderView != null) {
+            viewfinderView.updateSlideValue();
             viewfinderView.invalidate();
         }
 
@@ -611,6 +613,7 @@ public class CaptureView extends FrameLayout implements TextureView.SurfaceTextu
 
         CameraManager.get().MAX_FRAME_HEIGHT = this.MAX_FRAME_HEIGHT;
         CameraManager.get().framingRect = null;
+        CameraManager.get().framingRectInPreview = null;
         if (viewfinderView != null) {
             viewfinderView.updateSlideValue();
             viewfinderView.invalidate();
