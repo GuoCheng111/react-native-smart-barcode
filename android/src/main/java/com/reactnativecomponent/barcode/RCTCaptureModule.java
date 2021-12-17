@@ -1,8 +1,7 @@
 package com.reactnativecomponent.barcode;
 
 import android.os.Environment;
-import android.support.annotation.Nullable;
-import android.widget.Toast;
+import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;

@@ -3,8 +3,7 @@ package com.reactnativecomponent.barcode;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.support.annotation.Nullable;
-import android.util.Log;
+import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
@@ -20,7 +19,6 @@ import com.google.zxing.BarcodeFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 
 public class RCTCaptureManager extends ViewGroupManager<CaptureView> {
