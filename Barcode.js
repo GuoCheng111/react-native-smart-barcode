@@ -18,19 +18,20 @@ import {
     Platform,
 } from 'react-native'
 
-const BarcodeManager = Platform.OS == 'ios' ? NativeModules.Barcode : NativeModules.CaptureModule
+const BarcodeManager = Platform.OS == 'ios' ? NativeModules.Barcode : NativeModules.ScanCodeModule
 
 
 export default class Barcode extends Component {
 
     static defaultProps = {
-        barCodeTypes: Object.values(BarcodeManager.barCodeTypes),
+        barCodeTypes: Platform.OS === 'ios' ?  Object.values(BarcodeManager.barCodeTypes) : [],
         scannerRectWidth: 255,
         scannerRectHeight: 255,
         scannerRectTop: 0,
         scannerRectLeft: 0,
         scannerLineInterval: 3000,
         scannerRectCornerColor: `#09BB0D`,
+		scanType:0
     }
 
     static propTypes = {
@@ -43,6 +44,7 @@ export default class Barcode extends Component {
         scannerRectLeft: PropTypes.number,
         scannerLineInterval: PropTypes.number,
         scannerRectCornerColor: PropTypes.string,
+		scanType:PropTypes.number
     }
 
     render() {
@@ -61,11 +63,11 @@ export default class Barcode extends Component {
     }
 
     startScan() {
-        BarcodeManager.startSession()
+		BarcodeManager.startSession()
     }
 
     stopScan() {
-        BarcodeManager.stopSession()
+		BarcodeManager.stopSession()
     }
 
     _handleAppStateChange = (currentAppState) => {
@@ -78,4 +80,4 @@ export default class Barcode extends Component {
     }
 }
 
-const NativeBarCode = requireNativeComponent(Platform.OS == 'ios' ? 'RCTBarcode' : 'CaptureView', Barcode)
+const NativeBarCode = requireNativeComponent(Platform.OS == 'ios' ? 'RCTBarcode' : 'ScanCodeView', Barcode)

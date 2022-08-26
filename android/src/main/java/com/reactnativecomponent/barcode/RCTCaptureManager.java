@@ -3,6 +3,8 @@ package com.reactnativecomponent.barcode;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ReactMethod;
@@ -24,7 +26,7 @@ import java.util.Map;
 public class RCTCaptureManager extends ViewGroupManager<CaptureView> {
     private static final String REACT_CLASS = "CaptureView";//要与类名一致
     public static final int CHANGE_SHOW = 0;//用来标记方法的下标
-   Activity activity;
+    Activity activity;
     CaptureView cap;
     private float density;
 

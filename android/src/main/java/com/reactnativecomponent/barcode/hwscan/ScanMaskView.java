@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.reactnativecomponent.barcode.view;
+package com.reactnativecomponent.barcode.hwscan;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -26,16 +27,10 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.View;
 
-import com.google.zxing.ResultPoint;
 import com.reactnativecomponent.barcode.R;
-import com.reactnativecomponent.barcode.camera.CameraManager;
 
-
-import java.util.Collection;
-import java.util.HashSet;
 
 /**
  * This view is overlaid on top of the camera preview. It adds the viewfinder rectangle and partial
@@ -43,7 +38,7 @@ import java.util.HashSet;
  *
  * @author dswitkin@google.com (Daniel Switkin)
  */
-public final class ViewfinderView extends View
+public final class ScanMaskView extends View
 {
     /**扫描页面透明度*/
     private static final int[] SCANNER_ALPHA = { 0, 64, 128, 192, 255, 192,
@@ -60,7 +55,7 @@ public final class ViewfinderView extends View
     /**
      * 四个蓝色边角对应的宽度
      */
-    public int CORNER_WIDTH = 3;
+    public int CORNER_WIDTH = 4;
     /**
      * 扫描框中的中间线的宽度
      */
@@ -108,16 +103,16 @@ public final class ViewfinderView extends View
     /**扫描线颜色*/
     private final int laserColor;
     /**结果点的颜色*/
-    private final int resultPointColor;
+    private int resultPointColor;
     private int scannerAlpha;//扫描透明度
     /**可能的结果点数*/
-    private Collection<ResultPoint> possibleResultPoints;
+//    private Collection<ResultPoint> possibleResultPoints;
     /**最后的结果点数*/
-    private Collection<ResultPoint> lastPossibleResultPoints;
+//    private Collection<ResultPoint> lastPossibleResultPoints;
     /**
      * 是否画中间线
      */
-    public boolean drawLine = false;
+    public boolean drawLine = true;
 
     /**
      * 中间滑动线的最顶端位置
@@ -135,14 +130,17 @@ public final class ViewfinderView extends View
      */
     public int scanTime;
 
+    private Rect mRect;
 
     // This constructor is used when the class is built from an XML resource.
-    public ViewfinderView(Context context,int time,int color)
+    public ScanMaskView(Context context, int time, int color, Rect mRect)
     {
         super(context);
         density = context.getResources().getDisplayMetrics().density;
         //将像素转化成dp
         ScreenRate = (int) (25 * density);
+
+        this.mRect = mRect;
 
         // Initialize these once for performance rather than calling them every time in onDraw().
         paint = new Paint();
@@ -154,9 +152,9 @@ public final class ViewfinderView extends View
         frameBaseColor=reSetColor(frameColor);
 //        Log.i("Test","reSetColor"+frameBaseColor);
         laserColor = resources.getColor(R.color.viewfinder_laser);
-        resultPointColor = resources.getColor(R.color.possible_result_points);
+//        resultPointColor = resources.getColor(R.color.possible_result_points);
         scannerAlpha = 0;
-        possibleResultPoints = new HashSet<ResultPoint>(5);
+//        possibleResultPoints = new HashSet<ResultPoint>(5);
         drawLine=true;
         scanTime=time;
     }
@@ -177,8 +175,7 @@ public final class ViewfinderView extends View
     @Override
     public void onDraw(Canvas canvas)
     {
-        Rect frame = CameraManager.get().getFramingRect();
-        Log.e("--main--","frame = " + frame.toString());
+        Rect frame = mRect;
         if (frame == null)
         {
             return;
@@ -294,6 +291,7 @@ public final class ViewfinderView extends View
                 paintLine.setColor(frameColor);
 
 //                0x8800FF00
+                @SuppressLint("DrawAllocation")
                 Shader mShader = new LinearGradient(frame.left + CORNER_WIDTH, slideTop, frame.right
                         - CORNER_WIDTH, slideTop + MIDDLE_LINE_WIDTH,new int[] {Color.TRANSPARENT,frameBaseColor,frameColor,frameColor,frameColor,frameColor,frameColor,frameBaseColor,Color.TRANSPARENT},null, Shader.TileMode.CLAMP);
 //新建一个线性渐变，前两个参数是渐变开始的点坐标，第三四个参数是渐变结束的点的坐标。
@@ -325,37 +323,37 @@ public final class ViewfinderView extends View
                     width/2, frame.bottom + TEXT_PADDING_TOP * density,
                     paint);
 
-            Collection<ResultPoint> currentPossible = possibleResultPoints;
-            Collection<ResultPoint> currentLast = lastPossibleResultPoints;
-            if (currentPossible.isEmpty())
-            {
-                lastPossibleResultPoints = null;
-            }
-            else
-            {
-                possibleResultPoints = new HashSet<ResultPoint>(5);
-                lastPossibleResultPoints = currentPossible;
-                paint.setAlpha(OPAQUE);
-                paint.setColor(resultPointColor);
-                for (ResultPoint point : currentPossible)
-                {
-                    canvas.drawCircle(frame.left + point.getX(), frame.top
-                            + point.getY(), 6.0f, paint);//画扫描到的可能的点
-                }
-            }
-            if (currentLast != null)
-            {
-                paint.setAlpha(OPAQUE / 2);
-                paint.setColor(resultPointColor);
-                for (ResultPoint point : currentLast)
-                {
-                    canvas.drawCircle(frame.left + point.getX(), frame.top
-                            + point.getY(), 3.0f, paint);
-                }
-            }
-
-            // Request another update at the animation interval, but only repaint the laser line,
-            // not the entire viewfinder mask.
+//            Collection<ResultPoint> currentPossible = possibleResultPoints;
+//            Collection<ResultPoint> currentLast = lastPossibleResultPoints;
+//            if (currentPossible.isEmpty())
+//            {
+//                lastPossibleResultPoints = null;
+//            }
+//            else
+//            {
+//                possibleResultPoints = new HashSet<ResultPoint>(5);
+//                lastPossibleResultPoints = currentPossible;
+//                paint.setAlpha(OPAQUE);
+//                paint.setColor(resultPointColor);
+//                for (ResultPoint point : currentPossible)
+//                {
+//                    canvas.drawCircle(frame.left + point.getX(), frame.top
+//                            + point.getY(), 6.0f, paint);//画扫描到的可能的点
+//                }
+//            }
+//            if (currentLast != null)
+//            {
+//                paint.setAlpha(OPAQUE / 2);
+//                paint.setColor(resultPointColor);
+//                for (ResultPoint point : currentLast)
+//                {
+//                    canvas.drawCircle(frame.left + point.getX(), frame.top
+//                            + point.getY(), 3.0f, paint);
+//                }
+//            }
+//
+//            // Request another update at the animation interval, but only repaint the laser line,
+//            // not the entire viewfinder mask.
             postInvalidateDelayed(ANIMATION_DELAY, frame.left, frame.top,
                     frame.right, frame.bottom);
         }
@@ -378,10 +376,10 @@ public final class ViewfinderView extends View
         invalidate();
     }
 
-    public void addPossibleResultPoint(ResultPoint point)
-    {
-        possibleResultPoints.add(point);
-    }
+//    public void addPossibleResultPoint(ResultPoint point)
+//    {
+//        possibleResultPoints.add(point);
+//    }
 
 
     /**

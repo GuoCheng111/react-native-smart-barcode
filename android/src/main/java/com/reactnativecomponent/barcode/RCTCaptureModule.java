@@ -80,6 +80,9 @@ public class RCTCaptureModule extends ReactContextBaseJavaModule {
             getCurrentActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     captureManager.cap.startQR();
+
+
+
 //                    captureManager.cap.startScan();
 //                    Toast.makeText(getCurrentActivity(), "startScan", Toast.LENGTH_SHORT).show();
                 }

@@ -22,5 +22,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'androidx.appcompat:appcompat:1.0.0'
     compile 'com.facebook.react:react-native:+'
-    compile 'com.google.zxing:core:3.2.1'
+    compile 'com.google.zxing:core:3.3.3'
+    implementation 'com.huawei.hms:scanplus:2.6.0.301'
 }

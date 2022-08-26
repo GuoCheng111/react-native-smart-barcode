@@ -1026,6 +1026,7 @@ public class CaptureView extends FrameLayout implements TextureView.SurfaceTextu
     }
 
     public void setDecodeFormats(List<String> decode) {
+        Log.e("--main--","size = " + decode.size() + " ,decode = " + decode.toString());
         decodeFormats=new Vector<BarcodeFormat>();
         for(BarcodeFormat format : BarcodeFormat.values()){
             if(decode.contains(format.toString())){
